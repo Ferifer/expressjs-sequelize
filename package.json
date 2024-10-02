@@ -1,0 +1,33 @@
+{
+  "name": "express-boilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon src/index.js",
+    "db:init": "npx sequelize db:create --config src/config/config.js",
+    "db:migrate": "npx sequelize-cli db:migrate --migrations-path src/migrations --config src/config/config.js",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo --migrations-path src/migrations --config src/config/config.js",
+    "db:seed": "npx sequelize-cli db:seed:all --seeders-path src/seeders --config src/config/config.js",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo:all --config src/config/config.js",
+    "db:migrate:generate": "cross-env NAME=migration-name npx sequelize-cli migration:generate --migrations-path src/migrations --config src/config/config.js --name $NAME"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.3",
+    "sequelize": "^6.37.3",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.2"
+  }
+}
