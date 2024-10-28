@@ -38,6 +38,21 @@ class UserController {
       .json(defaultBaseResponse(StatusCodes.OK, user, "Success"));
   }
 
+  async getProfileUser(req, res) {
+    const user = await userRepository.getUserById(req.userId);
+    if (user === null) {
+      // Return a 404 response if the user is not found
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json(
+          defaultBaseResponse(StatusCodes.NOT_FOUND, null, `Data not found`)
+        );
+    }
+    res
+      .status(StatusCodes.OK)
+      .json(defaultBaseResponse(StatusCodes.OK, user, "Success"));
+  }
+
   async updateUser(req, res) {
     const userDto = new UserDto(req.body);
     const user = await userRepository.updateUser(req.params.id, userDto);
@@ -57,6 +72,9 @@ class UserController {
 const userController = new UserController();
 
 // routes
+router.get("/profile/", authMiddleware, (req, res) =>
+  userController.getProfileUser(req, res)
+);
 router.post("/", authMiddleware, (req, res) =>
   userController.createUser(req, res)
 );

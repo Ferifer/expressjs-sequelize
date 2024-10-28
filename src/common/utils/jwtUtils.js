@@ -9,7 +9,12 @@ const generateToken = (userId) => {
 
 // Function to verify a JWT token
 const verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    throw err; // Rethrow the error so it can be handled by the calling function
+  }
 };
 
 module.exports = {
