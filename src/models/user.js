@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/databaseConfig");
+const Role = require("./role"); // Import Role to establish association
+
 class User extends Model {}
 
 User.init(
@@ -26,6 +28,14 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    roleId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: Role, // Reference to Role model
+        key: "id",
+      },
+    },
     deletedAt: {
       type: DataTypes.DATE,
       allowNull: true,
@@ -42,5 +52,11 @@ User.init(
     timestamps: true,
   }
 );
+
+// Define association to Role
+User.belongsTo(Role, {
+  foreignKey: "roleId",
+  as: "role",
+});
 
 module.exports = User;

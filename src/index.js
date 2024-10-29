@@ -5,6 +5,8 @@ const sequelize = require("../src/config/databaseConfig");
 const userRoutes = require("../src/controller/userController");
 const productRoutes = require("../src/controller/productController");
 const authRoutes = require("../src/controller/authController");
+const User = require("./models/user");
+const Role = require("./models/role");
 
 const app = express();
 app.use(bodyParser.json());

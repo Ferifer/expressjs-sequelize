@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const User = require("../models/user");
 const { hashPassword } = require("../common/utils/securityUtils");
+const Role = require("../models/role");
 
 class UserRepository {
   async createUser(userDto) {
@@ -13,19 +14,38 @@ class UserRepository {
   async getAllUsers(search) {
     const whereClause = {};
 
-    // If a search term is provided, search in both name and email fields
     if (search) {
       whereClause[Op.or] = [
         { name: { [Op.like]: `%${search}%` } },
         { email: { [Op.like]: `%${search}%` } },
       ];
     }
+
     const data = await User.findAll({
-      attributes: ["id", "name", "email"],
+      attributes: ["id", "name", "email", "roleId"],
       where: whereClause,
+      include: [
+        {
+          model: Role,
+          as: "role",
+          attributes: ["id", "name"],
+          required: false,
+        },
+      ],
     });
 
-    return data;
+    console.log(data);
+
+    const result = data.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role_id: user.roleId,
+      role_name: user.role ? user.role.name : null,
+      lastLogin: user.lastLogin,
+    }));
+
+    return result;
   }
 
   async getUserByEmail(email) {
