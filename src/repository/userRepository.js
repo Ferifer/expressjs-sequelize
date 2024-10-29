@@ -34,8 +34,6 @@ class UserRepository {
       ],
     });
 
-    console.log(data);
-
     const result = data.map((user) => ({
       id: user.id,
       name: user.name,
