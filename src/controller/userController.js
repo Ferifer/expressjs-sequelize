@@ -5,6 +5,11 @@ const UserDto = require("../common/dto/userDto");
 const defaultBaseResponse = require("../common/baseResponse/defaultBaseResponse");
 const { StatusCodes } = require("http-status-codes");
 const authMiddleware = require("../middleware/authMiddleware");
+const transporter = require("../config/nodeMailerConfig.js");
+const renderTemplate = require("../email/render/renderTemplate.js"); // Utility function to render React components to HTML
+const WelcomeEmail = require("../email/emailTemplates/WelcomeEmail.jsx"); // Import the .jsx file
+
+require("dotenv").config(); // Load environment variables
 
 class UserController {
   async createUser(req, res) {
@@ -67,6 +72,44 @@ class UserController {
       .status(StatusCodes.OK)
       .json(defaultBaseResponse(StatusCodes.OK, user, "Success"));
   }
+
+  async sendEmailToUser(req, res) {
+    const {
+      name,
+      email,
+      ticket_type,
+      ticket_name,
+      address,
+      open_gate,
+      close_gate,
+      total_payment,
+    } = req.body;
+
+    const htmlContent = renderTemplate(WelcomeEmail, {
+      name,
+      ticket_type,
+      ticket_name,
+      address,
+      open_gate,
+      close_gate,
+      total_payment,
+    });
+
+    const mailOptions = {
+      from: process.env.SMTP_USER,
+      to: email,
+      subject: "Welcome to Our Service!",
+      html: htmlContent,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: "Welcome email sent successfully!" });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ message: "Failed to send welcome email." });
+    }
+  }
 }
 
 const userController = new UserController();
@@ -75,6 +118,8 @@ const userController = new UserController();
 router.get("/profile/", authMiddleware, (req, res) =>
   userController.getProfileUser(req, res)
 );
+router.post("/send/", (req, res) => userController.sendEmailToUser(req, res));
+
 router.post("/", authMiddleware, (req, res) =>
   userController.createUser(req, res)
 );

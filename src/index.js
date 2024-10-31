@@ -7,6 +7,9 @@ const productRoutes = require("../src/controller/productController");
 const authRoutes = require("../src/controller/authController");
 const User = require("./models/user");
 const Role = require("./models/role");
+require("@babel/register")({
+  extensions: [".js", ".jsx"], // This allows Babel to transpile .js and .jsx files
+});
 
 const app = express();
 app.use(bodyParser.json());

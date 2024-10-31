@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon src/index.js",
+    "start:dev": "nodemon --exec babel-node src/index.js",
     "db:init": "npx sequelize db:create --config src/config/config.js",
     "db:migrate": "npx sequelize-cli db:migrate --migrations-path src/migrations --config src/config/config.js",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo --migrations-path src/migrations --config src/config/config.js",
@@ -16,16 +16,24 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/register": "^7.25.9",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
+    "nodemailer": "^6.9.16",
+    "react-dom": "^18.3.1",
+    "react-email": "^3.0.1",
     "sequelize": "^6.37.3",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
     "cross-env": "^7.0.3",
     "nodemon": "^3.1.7",
     "sequelize-cli": "^6.6.2"
